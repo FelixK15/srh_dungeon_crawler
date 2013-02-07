@@ -19,3 +19,33 @@ void ItemMouseClick( int iPosX,int iPosY )
 		}
 	}
 }
+
+void MenuMouseClick( int iPosX,int iPosY )
+{
+	for(int i = 0;i < 10;++i){
+		if(g_pButtons[i] != NULL){
+			if(iPosX > g_pButtons[i]->iPosX && iPosX < g_pButtons[i]->iPosX + g_pButtons[i]->pGraphics[0]->iWidth){
+				if(iPosY > g_pButtons[i]->iPosY && iPosY < g_pButtons[i]->iPosY + g_pButtons[i]->pGraphics[0]->iHeight){
+					g_pButtons[i]->pHandler();
+					break;
+				}
+			}
+		}
+	}
+}
+
+void MenuMouseMove( int iPosX,int iPosY )
+{
+	for(int i = 0;i < 10;++i){
+		if(g_pButtons[i] != NULL){
+			if(iPosX > g_pButtons[i]->iPosX && iPosX < g_pButtons[i]->iPosX + g_pButtons[i]->pGraphics[0]->iWidth){
+				if(iPosY > g_pButtons[i]->iPosY && iPosY < g_pButtons[i]->iPosY + g_pButtons[i]->pGraphics[0]->iHeight){
+					g_pButtons[i]->iCurrentState = SRHButton::iFocused;
+					continue;
+				}
+			}
+
+			g_pButtons[i]->iCurrentState = SRHButton::iActive;
+		}
+	}
+}

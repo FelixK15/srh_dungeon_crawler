@@ -3,10 +3,33 @@
 #include "SRHGlobals.h"
 #include "SRHGui.h"
 
+#include <fcntl.h>
+#include <time.h>
+#include <io.h>
+
+void SRHCreateConsole()
+{
+	//Create a new console
+	AllocConsole();
+
+	//Get the handle for the output of the console.
+	int iStdOutHandle = _open_osfhandle((long)GetStdHandle(STD_OUTPUT_HANDLE),_O_TEXT);
+
+	//Get a File object to the console output so we can set the standard output of the application
+	//to the output of the console.
+	FILE *pOutput = _fdopen(iStdOutHandle,"w");
+
+	//Set the standard output of the application to the output of the console.
+	//Whenever we call printf now, the text will be printed to the console.
+	*stdout = *pOutput;
+
+	printf("Debug console initialized...\n");
+}
+
 LRESULT CALLBACK SRHWndProc(HWND pHWND,UINT iMessage,WPARAM wParam,LPARAM lParam)
 {
 	//This function checks each message that the windows receives.
-	if(iMessage == WM_CLOSE){
+	if(iMessage == WM_DESTROY){
 		//If the user choose the close the window, call the window close handler and post a WM_QUIT message.
 		if(g_pHandler.pWindowCloseHandler){
 			g_pHandler.pWindowCloseHandler();
@@ -59,7 +82,7 @@ LRESULT CALLBACK SRHWndProc(HWND pHWND,UINT iMessage,WPARAM wParam,LPARAM lParam
 	return DefWindowProc(pHWND,iMessage,wParam,lParam);
 }
 
-void SRHCreateWindow(const int iWidth,const int iHeight,const char *pTitle)
+void SRHCreateWindow(const int iWidth,const int iHeight,const char *pTitle,HINSTANCE hInstance)
 {
 	//If a window has been crated previously, throw an exception.
 	if(g_pWindow){
@@ -67,9 +90,15 @@ void SRHCreateWindow(const int iWidth,const int iHeight,const char *pTitle)
 	}
 
 	//If no HINSTANCE has been saved previously, save it now.
-	if(!g_pInstance){
-		g_pInstance = (HINSTANCE)GetModuleHandle(NULL);
+	if(!hInstance){
+		hInstance = (HINSTANCE)GetModuleHandle(NULL);
 	}
+
+#ifdef DEBUG
+	SRHCreateConsole();
+#endif
+
+	g_pInstance = hInstance;
 
 	RECT rWindowRect;
 	rWindowRect.bottom = iHeight;
@@ -77,6 +106,10 @@ void SRHCreateWindow(const int iWidth,const int iHeight,const char *pTitle)
 	rWindowRect.top = rWindowRect.left = 0;
 	
 	AdjustWindowRect(&rWindowRect,WS_OVERLAPPEDWINDOW,FALSE);
+
+	//print debug information
+	printf("Window rect:\nleft:%d\tright:%d\ttop:%d\tbottom:%d\n",
+		rWindowRect.left,rWindowRect.right,rWindowRect.top,rWindowRect.bottom);
 
 	//Create the window class.
 	WNDCLASS wcClass;
@@ -90,6 +123,8 @@ void SRHCreateWindow(const int iWidth,const int iHeight,const char *pTitle)
 
 	//Register the class so we can create a window based on this class.
 	RegisterClass(&wcClass);
+
+	printf("Window class SRHGameWindow registered!\n");
 
 	//Try to create the window. (If that failed, g_pWindow will be NULL)
 	g_pWindow = CreateWindow("SRHGameWindow",pTitle,WS_OVERLAPPEDWINDOW,0,0,
@@ -106,6 +141,8 @@ void SRHCreateWindow(const int iWidth,const int iHeight,const char *pTitle)
 		ShowWindow(g_pWindow,5);
 		SetForegroundWindow(g_pWindow);
 		SetFocus(g_pWindow);
+
+		printf("Window created!\n");
 
 		g_iHeight = iHeight;
 		g_iWidth = iWidth;
@@ -137,4 +174,6 @@ void SRHCloseWindow()
 
 	//Unregister the class, we registered during SRHCreateWindow().
 	UnregisterClass("SRHGameWindow",NULL);
+
+	printf("Window closed and class unregistered\n");
 }

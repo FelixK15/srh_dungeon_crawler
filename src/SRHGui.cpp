@@ -12,9 +12,9 @@ SRHButton *SRHCreateButton( const char* pCaption,const char* pBackgroundImage,co
 
 	try{
 		//Try to load the provided graphic.
-		pButton->pGraphics[SRHButton::iActive] = SRHLoadGraphic(pBackgroundImage);
-		pButton->pGraphics[SRHButton::iInactive] = SRHLoadGraphic(pInactiveImage);
-		pButton->pGraphics[SRHButton::iFocused] = SRHLoadGraphic(pFocusedImage);
+		pButton->pGraphics[SRHButton::iActive] = pBackgroundImage != NULL ? SRHLoadGraphic(pBackgroundImage) : NULL;
+		pButton->pGraphics[SRHButton::iInactive] = pInactiveImage != NULL ? SRHLoadGraphic(pInactiveImage) : NULL;
+		pButton->pGraphics[SRHButton::iFocused] = pFocusedImage != NULL ? SRHLoadGraphic(pFocusedImage) : NULL;
 	}catch(std::exception &e){
 		//If the loading failed, delete the SRHButton struct and throw an exception.
 		for(int i = 0;i < SRHButton::iAmountGraphics;++i){
@@ -36,9 +36,11 @@ SRHButton *SRHCreateButton( const char* pCaption,const char* pBackgroundImage,co
 void SRHDrawButton( SRHButton *pButton )
 {
 	if(pButton != NULL){
-		pButton->pGraphics[pButton->iCurrentState]->iPosX = pButton->iPosX;
-		pButton->pGraphics[pButton->iCurrentState]->iPosY = pButton->iPosY;
+		if(pButton->pGraphics[pButton->iCurrentState] != NULL){
+			pButton->pGraphics[pButton->iCurrentState]->iPosX = pButton->iPosX;
+			pButton->pGraphics[pButton->iCurrentState]->iPosY = pButton->iPosY;
 
-		SRHDrawGraphic(pButton->pGraphics[pButton->iCurrentState]);
+			SRHDrawGraphic(pButton->pGraphics[pButton->iCurrentState]);
+		}
 	}
 }

@@ -2,7 +2,12 @@
 #include "GameGlobals.h"
 
 #include "SRHGlobals.h"
+#include "SRHSound.h"
+
 #include "GameHandler.h"
+#include "GameDrawFunctions.h"
+
+#include "GameKeyboardHandler.h"
 
 #include <time.h>
 
@@ -66,8 +71,8 @@ void UpdateCamera()
 	int iNewCameraPosX = 0;
 	int iNewCameraPosY = 0;
 
-	iNewCameraPosX = g_pHero->iPosX - g_pCamera->iViewportWidth*0.5;
-	iNewCameraPosY = g_pHero->iPosY - g_pCamera->iViewportHeight*0.5;
+	iNewCameraPosX = g_pHero->iPosX - (int)(g_pCamera->iViewportWidth*0.5);
+	iNewCameraPosY = g_pHero->iPosY - (int)(g_pCamera->iViewportHeight*0.5);
 
 	//Set the new camera position
 	g_pCamera->iPosX = iNewCameraPosX;
@@ -76,6 +81,17 @@ void UpdateCamera()
 
 void UpdateHero(unsigned int iMS)
 {
+	if(g_pHero->iHealth <= 0){
+		g_pGameOverGraphic = SRHLoadGraphic("Images\\Menus\\gameover.bmp");
+
+		g_pHandler.pDrawHandler = DrawGameOver;
+		g_pHandler.pUpdateHandler = NULL;
+		g_pHandler.pMouseLeftClickHandler = NULL;
+		g_pHandler.pMouseMoveHandler = NULL;
+		g_pHandler.pKeyDownHandler = KeyboardHandlerGameover;
+	}
+
+
 	//Update the position of the player
 	g_pHero->iPosXLastFrame = g_pHero->iPosX;
 	g_pHero->iPosYLastFrame = g_pHero->iPosY;
@@ -112,25 +128,19 @@ void UpdateEnemies( unsigned int iMS )
 		Enemy *pEnemy = g_pFightScreen->pEnemy;
 		if(g_pFightScreen->pEnemy->iAttackCooldown <= 0){
 			int iAttackDamage = pEnemy->iStrength / g_pHero->iDefense;
-			srand(time(NULL));
-			iAttackDamage += rand() % pEnemy->iStrength * 0.5;
+			srand((unsigned int)time(NULL));
+			iAttackDamage += (int)(rand() % pEnemy->iStrength * 0.5);
 			g_pHero->iHealth -= iAttackDamage;
+			SRHPlaySound("Sounds\\sword.wav");
 			pEnemy->iAttackCooldown = Enemy::iDefaultAttackCoolDown;
 		}
 	}
 }
 
-void UpdateIdle(unsigned int iMS)
+void UpdateMessagebox(unsigned int iMS)
 {
-	g_iIdleTime -= iMS;
-
-	if(g_iIdleTime <= 0){
-		if(g_pMessageBox != NULL){
-			SAFE_DELETE(g_pMessageBox->pGraphic);
-			SAFE_DELETE(g_pMessageBox);
-		}
-		
-		g_pHandler.pKeyDownHandler = KeyboardHandler;
+	if(g_pMessageBox == NULL){
+		g_pHandler.pKeyDownHandler = KeyboardHandlerMovement;
 		g_pHandler.pUpdateHandler = Update;
 	}
 }

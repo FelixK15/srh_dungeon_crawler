@@ -18,8 +18,12 @@ void LoadLevel( const char *pFileName )
 	//the file.
 	FILE *pFile = fopen(pFileName,"r");
 	if(pFile == NULL){
-		printf(strerror(errno));
+		char sBuffer[50];
+		sprintf(sBuffer,strerror(errno));
+		throw std::exception(sBuffer);
 	}else{
+		printf("Parsing level file '%s'...\n",pFileName);
+
 		char cChar = fgetc(pFile);
 		char *pImageName = NULL;
 
@@ -27,7 +31,7 @@ void LoadLevel( const char *pFileName )
 		int iPosY = 0;
 		bool bCollidable = false;
 		int iRandom = 0;
-		srand(time(NULL));
+		srand((unsigned int)time(NULL));
 		//Iterate through the file until EOF (End of file) is reached.
 		while(cChar != EOF){
 			if(cChar == '.'){
@@ -82,6 +86,13 @@ void LoadLevel( const char *pFileName )
 		g_pFogOfWar->cTransparent.R = 255;
 		g_pFogOfWar->cTransparent.G = 255;
 		g_pFogOfWar->cTransparent.B = 255;
+
+		g_pFightScreen = new FightScreen();
+		g_pFightScreen->pEnemy = NULL;
+		g_pFightScreen->pEnemyLifeBar = NULL;
+		g_pFightScreen->pGraphic = SRHLoadGraphic("Images\\Hero\\fightscreen.bmp");
+		g_pFightScreen->pGraphic->iPosX = 400;
+		g_pFightScreen->pGraphic->iPosY = 0;
 	}
 }
 
@@ -89,9 +100,12 @@ void LoadItems( const char *pFileName )
 {
 	FILE *pFile = fopen(pFileName,"r");
 	if(pFile == NULL){
-		printf(strerror(errno));
+		char sBuffer[50];
+		sprintf(sBuffer,strerror(errno));
+		throw std::exception(sBuffer);
 	}else{
 		char cChar = fgetc(pFile);
+		printf("Parsing item file... '%s'\n",pFileName);
 
 		int iPosX = 0;
 		int iPosY = 0;
@@ -186,6 +200,8 @@ Tile* CreateTile( int iPosX,int iPosY,const char *pImageFile,bool bCollidable )
 	g_pTiles[g_iAmountTiles]->pGraphic->iPosX = iPosX;
 	g_pTiles[g_iAmountTiles]->pGraphic->iPosY = iPosY;
 
+	printf("Created tile...\n");
+
 	return g_pTiles[g_iAmountTiles++];
 }
 
@@ -197,8 +213,6 @@ GameHero* CreateHero( int iPosX,int iPosY )
 	}else{
 		pHero = new GameHero();
 		g_pHero = pHero;
-
-		pHero->pGraphic = SRHLoadGraphic("Images\\Hero\\hero.bmp");
 
 		pHero->pLifeBar = SRHCreateGraphic(119,12);
 		pHero->pManaBar = SRHCreateGraphic(119,12);
@@ -213,6 +227,7 @@ GameHero* CreateHero( int iPosX,int iPosY )
 		pHero->pManaBar->iPosY = 72;
 
 		pHero->iPosX = pHero->iPosY = 0;
+		pHero->pGraphic = SRHLoadGraphic("Images\\Hero\\Hero.bmp");
 		pHero->pGraphic->bVisible = true;
 		pHero->iViewRadius = 150;
 
@@ -258,7 +273,7 @@ Treasure* CreateTreasure( int iPosX,int iPosY )
 	g_pTreasures[g_iAmountTreasures]->pGraphic[1] = SRHLoadGraphic("Images\\Items\\treasure_opened.bmp");
 	g_pTreasures[g_iAmountTreasures]->pGraphic[1]->iPosX = iPosX;
 	g_pTreasures[g_iAmountTreasures]->pGraphic[1]->iPosY = iPosY;
-	
+
 	return g_pTreasures[g_iAmountTreasures++];
 }
 

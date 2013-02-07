@@ -101,26 +101,26 @@ void DrawFogOfWar()
 		if(g_pLightSources[i] != NULL){
 			//Center position will be calculated by the position of the GRAPHIC.That is because the graphic has already
 			//been shifted by the camera previously.
-			iCenterX = g_pLightSources[i]->pGraphic->iPosX + g_pLightSources[i]->pGraphic->iWidth*0.5;
-			iCenterY = g_pLightSources[i]->pGraphic->iPosY + g_pLightSources[i]->pGraphic->iHeight*0.5;
+			iCenterX = g_pLightSources[i]->pGraphic->iPosX + (int)(g_pLightSources[i]->pGraphic->iWidth*0.5);
+			iCenterY = g_pLightSources[i]->pGraphic->iPosY + (int)(g_pLightSources[i]->pGraphic->iHeight*0.5);
 
 			//The light ellipse of the light source will get drawn.
-			Ellipse(g_pFogOfWar->pImageDC,iCenterX - g_pLightSources[i]->iViewRadius*0.5,
-										  iCenterY - g_pLightSources[i]->iViewRadius*0.5,
-										  iCenterX + g_pLightSources[i]->iViewRadius*0.5,
-										  iCenterY + g_pLightSources[i]->iViewRadius*0.5);
+			Ellipse(g_pFogOfWar->pImageDC,iCenterX - (int)(g_pLightSources[i]->iViewRadius*0.5),
+										  iCenterY - (int)(g_pLightSources[i]->iViewRadius*0.5),
+										  iCenterX + (int)(g_pLightSources[i]->iViewRadius*0.5),
+										  iCenterY + (int)(g_pLightSources[i]->iViewRadius*0.5));
 		}
 	}
 
 	//Calculate the center position of the hero.
-	iCenterX = (g_pHero->iPosX - g_pCamera->iPosX) + g_pHero->pGraphic->iWidth*0.5;
-	iCenterY = (g_pHero->iPosY - g_pCamera->iPosY) + g_pHero->pGraphic->iHeight*0.5;
+	iCenterX = (g_pHero->iPosX - g_pCamera->iPosX) + (int)(g_pHero->pGraphic->iWidth*0.5);
+	iCenterY = (g_pHero->iPosY - g_pCamera->iPosY) + (int)(g_pHero->pGraphic->iHeight*0.5);
 
 	//The view ellipse of the player gets drawn here.
-	Ellipse(g_pFogOfWar->pImageDC,iCenterX - g_pHero->iViewRadius*0.5,
-								  iCenterY - g_pHero->iViewRadius*0.5,
-								  iCenterX + g_pHero->iViewRadius*0.5,
-								  iCenterY + g_pHero->iViewRadius*0.5);
+	Ellipse(g_pFogOfWar->pImageDC,iCenterX - (int)(g_pHero->iViewRadius*0.5),
+								  iCenterY - (int)(g_pHero->iViewRadius*0.5),
+								  iCenterX + (int)(g_pHero->iViewRadius*0.5),
+								  iCenterY + (int)(g_pHero->iViewRadius*0.5));
 
 	//Draw the "fog of war"
 	SRHDrawGraphic(g_pFogOfWar);
@@ -321,7 +321,7 @@ void DrawFightScreen()
 		float fWidthOfHPBar = fWidthOfOneHP * (float)pEnemy->iHealth;
 		
 		SelectObject(g_pFightScreen->pEnemyLifeBar->pImageDC,pLifeBarBrush);
-		Rectangle(g_pFightScreen->pEnemyLifeBar->pImageDC,0,0,fWidthOfHPBar,g_pFightScreen->pEnemyLifeBar->iHeight);
+		Rectangle(g_pFightScreen->pEnemyLifeBar->pImageDC,0,0,(int)fWidthOfHPBar,g_pFightScreen->pEnemyLifeBar->iHeight);
 		DeleteObject(pLifeBarBrush);
 
 		RECT rtTextRect = {0};
@@ -344,4 +344,29 @@ void DrawFightScreen()
 		SRHDrawGraphic(pEnemy->pFightGraphic);
 		SRHDrawGraphic(g_pFightScreen->pEnemyLifeBar);
 	}
+}
+
+void DrawMainMenu()
+{
+	SRHDrawGraphic(g_pMainMenuGraphic);
+
+	for(int i = 0;i < 10;++i){
+		if(g_pButtons[i] != NULL){
+			SRHDrawButton(g_pButtons[i]);
+		}
+	}
+
+	SRHSwapBackbuffer();
+}
+
+void DrawGameOver()
+{
+	SRHDrawGraphic(g_pGameOverGraphic);
+	SRHSwapBackbuffer();
+}
+
+void DrawInstructions()
+{
+	SRHDrawGraphic(g_pInstructions);
+	SRHSwapBackbuffer();
 }

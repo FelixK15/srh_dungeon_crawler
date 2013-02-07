@@ -6,6 +6,8 @@
 #include "SRHIncludes.h"
 
 #include "SRHGui.h"
+#include "GameUpdateFunctions.h"
+#include "GameDrawFunctions.h"
 
 #include "GameTypes.h"
 #include "GameGlobals.h"
@@ -15,36 +17,40 @@
 #include "GameLevelLoader.h"
 
 #include "GameMessageBox.h"
+#include "GameKeyboardHandler.h"
 
 #include <time.h>
 
-int main()
+void LoadResources()
 {
-	//Brightness
-	//exit code.
-	//memory tracker?
+	g_pMainMenuGraphic = SRHLoadGraphic("Images\\Menus\\mainmenu.bmp");
+	g_pInstructions = SRHLoadGraphic("Images\\Menus\\instructions.bmp");
+
+	g_pMainMenuGraphic->iPosX = g_pMainMenuGraphic->iPosY = 0;
+
+	g_pButtons[0] = SRHCreateButton("Start","Images\\Buttons\\StartGame_Active.bmp",NULL,
+		"Images\\Buttons\\StartGame_Focused.bmp",270,195,StartGame);
+
+	g_pButtons[1] = SRHCreateButton("Instructions","Images\\Buttons\\Instructions_Active.bmp",NULL,
+		"Images\\Buttons\\Instructions_Focused.bmp",270,300,ShowInstructions);
+
+	g_pButtons[2] = SRHCreateButton("Quit","Images\\Buttons\\QuitGame_Active.bmp",NULL,
+		"Images\\Buttons\\QuitGame_Focused.bmp",270,405,QuitGame);
+}
+
+int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR pCommandLine,int iCmdShow)
+{
 	int iReturn = 0;
 	try
 	{
 		//Window gets created, level gets loaded, handler gets set.
-		SRHCreateWindow(800,600,"TEST");
-		LoadLevel("Data\\level.txt");
-		LoadItems("Data\\items.txt");
-		g_pHandler.pMouseLeftClickHandler = ItemMouseClick;
-		g_pHandler.pDrawHandler = Drawer;
-		g_pHandler.pKeyDownHandler = KeyboardHandler;
-		g_pHandler.pUpdateHandler = Update;
-		g_pHandler.pQuitHandler = ReleaseResources;
-		
-		g_pHero->iHealth = 20;
-		g_pHero->iMana = 10;
+		SRHCreateWindow(800,600,"SRH Dungeon Crawler",hInstance);
+		LoadResources();
 
-		g_pFightScreen = new FightScreen();
-		g_pFightScreen->pEnemy = NULL;
-		g_pFightScreen->pEnemyLifeBar = NULL;
-		g_pFightScreen->pGraphic = SRHLoadGraphic("Images\\Hero\\fightscreen.bmp");
-		g_pFightScreen->pGraphic->iPosX = 400;
-		g_pFightScreen->pGraphic->iPosY = 0;
+		g_pHandler.pMouseMoveHandler = MenuMouseMove;
+		g_pHandler.pMouseLeftClickHandler = MenuMouseClick;
+		g_pHandler.pDrawHandler = DrawMainMenu;
+		g_pHandler.pQuitHandler = ReleaseResources;
 
 		//We're ready to go. This function ends if the game closes.
 		iReturn = SRHStartGame();
@@ -52,6 +58,5 @@ int main()
 	{
 		printf(e.what());
 	}
-	std::system("PAUSE");
 	return iReturn;
 }

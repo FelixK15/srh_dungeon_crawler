@@ -72,3 +72,12 @@ SRHGraphic *g_pMenuGraphic = NULL;
 
 //Fog of war
 SRHGraphic *g_pFogOfWar = NULL;
+
+//Main Menu
+SRHGraphic *g_pMainMenuGraphic = NULL;
+
+SRHGraphic *g_pGameOverGraphic = NULL;
+
+SRHGraphic *g_pInstructions = NULL;
+
+SRHButton *g_pButtons[10];

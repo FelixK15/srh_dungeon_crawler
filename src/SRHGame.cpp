@@ -24,7 +24,7 @@ UINT SRHStartGame()
 
 	while(bRunning){
 		//Get the current message from the message stack.
-		if(PeekMessage(&msg,g_pWindow,0,0,PM_REMOVE)){
+		if(PeekMessage(&msg,NULL,0,0,PM_REMOVE)){
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 
@@ -37,7 +37,7 @@ UINT SRHStartGame()
 			iNow = GetTickCount();
 			iDeltaTime = iNow - iLast;
 
-			//Call update and draw handler (if any exsits)
+			//Call update and draw handler (if any exists)
 			if(g_pHandler.pUpdateHandler){
 				g_pHandler.pUpdateHandler(iDeltaTime);
 			}
@@ -47,7 +47,7 @@ UINT SRHStartGame()
 			}
 			
 			//Convert the deltatime milliseconds to seconds.
-			fSeconds = iDeltaTime / 1000;
+			fSeconds = (float)(iDeltaTime / 1000);
 
 			//If the current frame took longer than an average frame should take,
 			//clamp the value.
@@ -55,7 +55,7 @@ UINT SRHStartGame()
 				fSeconds = fTimePerFrame;
 			}else if(fSeconds < fTimePerFrame){
 				//If the frame took less than an average frame, sleep the rest.
-				dwDifferences = ((fTimePerFrame - fSeconds) * 1000);
+				dwDifferences = (DWORD)((fTimePerFrame - fSeconds) * 1000);
 				Sleep(dwDifferences);
 			}
 

@@ -5,6 +5,7 @@ HINSTANCE g_pInstance = NULL;
 HDC g_pBackbufferDC = NULL;
 HDC g_pFrontbufferDC = NULL;
 HBITMAP g_pBackbufferBitmap = NULL;
+HWAVEOUT g_pWaveDriver = NULL;
 
 SRHHandler g_pHandler;
 

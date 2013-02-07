@@ -1,12 +1,18 @@
 #include "GameHandler.h"
 
+#include "GameMessageBox.h"
+#include "GameKeyboardHandler.h"
+#include "GameMouseFunctions.h"
 #include "GameMenuFunctions.h"
 #include "GameUpdateFunctions.h"
 #include "GameDrawFunctions.h"
 #include "GameGlobals.h"
 #include "GameMath.h"
 
+#include "GameLevelLoader.h"
+
 #include "SRHGlobals.h"
+#include "SRHSound.h"
 
 #include <time.h>
 
@@ -30,16 +36,18 @@ void MoveUp()
 	g_pHero->iPosY -= g_iTileHeight;
 }
 
-void tryAttackEnemy()
+void TryAttackEnemy()
 {
 	//Is there an enemy to attack?
 	if(g_pFightScreen->pEnemy != NULL){
 		Enemy *pEnemy = g_pFightScreen->pEnemy;
 
+		SRHPlaySound("Sounds\\sword.wav");
+
 		//Calculate the attack damage.
 		int iAttackDamage = g_pHero->iStrength / pEnemy->iDefense;
-		srand(time(NULL));
-		iAttackDamage += rand() % g_pHero->iStrength*0.5;
+		srand((unsigned int)time(NULL));
+		iAttackDamage += (int)(rand() % g_pHero->iStrength*0.5);
 
 		//Subtract the damage from the enemy health
 		pEnemy->iHealth -= iAttackDamage;
@@ -51,6 +59,7 @@ void tryAttackEnemy()
 			int iIndex = pEnemy->iIndex;
 			SAFE_DELETE(pEnemy);
 			g_pEnemies[iIndex] = NULL;
+			SRHPlaySound("Sounds\\hit.wav");
 		}
 
 		//Reset the attack cool down
@@ -58,7 +67,7 @@ void tryAttackEnemy()
 	}
  }
 
-void tryOpenTreasure()
+void TryOpenTreasure()
 {
 	//iterate through all treasures
 	for(int i = 0;i < g_iAmountTreasures;++i){
@@ -71,6 +80,12 @@ void tryOpenTreasure()
 					g_pTreasures[i]->bOpened = true;
 					//...and add the item of the treasure to the players inventory.
 					AddItem(g_pTreasures[i]->pItem);
+
+					char cBuffer[80];
+					sprintf(cBuffer,"Found %s",g_pTreasures[i]->pItem->pName);
+					g_pMessageBox = CreateMessageBox(cBuffer,250,330,100,50);
+					g_pHandler.pUpdateHandler = UpdateMessagebox;
+					g_pHandler.pKeyDownHandler = KeyboardHandlerMessageBox;
 				}
 			}
 		}
@@ -124,18 +139,21 @@ void ReleaseResources()
 		SAFE_DELETE(g_pTreasures[i]);
 	}
 
-	for(int i = 0;i < g_iMaxItems;++i){
-		if(g_pHero->pItems[i] != NULL){
-			SAFE_DELETE(g_pHero->pItems[i]->pGraphic);
-			SAFE_DELETE(g_pHero->pItems[i]);
-		}
-	}
 
-	for(int i = 0;i < g_iMaxEquipment;++i){
-		if(g_pHero->pEquipment[i] != NULL){
-			SAFE_DELETE(g_pHero->pEquipment[i]->pGraphicInventory);
-			SAFE_DELETE(g_pHero->pEquipment[i]->pGraphicOnPlayer);
-			SAFE_DELETE(g_pHero->pEquipment[i]);
+	if(g_pHero != NULL){
+		for(int i = 0;i < g_iMaxItems;++i){
+			if(g_pHero->pItems[i] != NULL){
+				SAFE_DELETE(g_pHero->pItems[i]->pGraphic);
+				SAFE_DELETE(g_pHero->pItems[i]);
+			}
+		}
+
+		for(int i = 0;i < g_iMaxEquipment;++i){
+			if(g_pHero->pEquipment[i] != NULL){
+				SAFE_DELETE(g_pHero->pEquipment[i]->pGraphicInventory);
+				SAFE_DELETE(g_pHero->pEquipment[i]->pGraphicOnPlayer);
+				SAFE_DELETE(g_pHero->pEquipment[i]);
+			}
 		}
 	}
 
@@ -160,30 +178,42 @@ void ReleaseResources()
 	if(g_pFogOfWar != NULL){
 		SAFE_DELETE(g_pFogOfWar);
 	}
+
+	if(g_pMessageBox != NULL){
+		SAFE_DELETE(g_pMessageBox->pGraphic);
+		SAFE_DELETE(g_pMessageBox);
+	}
+
+	g_iAmountTiles = g_iAmountTreasures = 0;
 }
 
-void KeyboardHandler(char key)
+void StartGame()
 {
-	//Controls:
-	//Left = Move Left;
-	//Right = Move Right;
-	//Up = Move Up;
-	//Down = Move Down;
-	//Space = Attack / Open Treasure
+	ReleaseResources();
 
-	if(key == VK_LEFT){
-		MoveLeft();
-	}else if(key == VK_RIGHT){
-		MoveRight();
-	}else if(key == VK_UP){
-		MoveUp();
-	}else if(key == VK_DOWN){
-		MoveDown();
-	}else if(key == VK_SPACE){
-		tryOpenTreasure();
+	LoadLevel(".\\Data\\level.txt");
+	LoadItems(".\\Data\\items.txt");
 
-		if(g_pHero->iAttackCooldown <= 0){
-			tryAttackEnemy();
-		}
-	}
+	g_pHandler.pDrawHandler = Drawer;
+	g_pHandler.pUpdateHandler = Update;
+	g_pHandler.pMouseLeftClickHandler = ItemMouseClick;
+	g_pHandler.pMouseMoveHandler = NULL;
+	g_pHandler.pKeyDownHandler = KeyboardHandlerMovement;
+
+	g_pHero->iHealth = g_pHero->iMaxHealth;
+	g_pHero->iMana = g_pHero->iMaxMana;
+
+}
+
+void QuitGame()
+{
+	PostMessage(g_pWindow,WM_CLOSE,0,0);
+}
+
+void ShowInstructions()
+{
+	g_pHandler.pKeyDownHandler = KeyboardHandlerGameover;
+	g_pHandler.pDrawHandler = DrawInstructions;
+	g_pHandler.pMouseLeftClickHandler = NULL;
+	g_pHandler.pMouseMoveHandler = NULL;
 }

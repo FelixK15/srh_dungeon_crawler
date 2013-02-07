@@ -3,6 +3,8 @@
 #include "GameMenuFunctions.h"
 #include "SRHExceptions.h"
 
+#include "SRHSound.h"
+
 Item *CreateItem(const char *pName,const char *pImageName,ItemClickHandler pClickHandler)
 {
 	Item *pItem = new Item();
@@ -39,6 +41,8 @@ void KeyClickHandler( Item *pKey )
 				DeleteItem(pKey->pName);
 				pDoor->pTile->bCollidable = false;
 				pDoor->pTile->pGraphic->bVisible = false;
+
+				SRHPlaySound("Sounds\\door.wav");
 			}
 		}		
 	}
@@ -51,6 +55,8 @@ void SwordClickHandler( Item *pSword )
 	}else{
 		AddEquipment(g_iLeftHand,10,0,"Images\\Items\\sword_icon.bmp","Images\\Hero\\sword.bmp");
 		DeleteItem(pSword->pName);
+
+		SRHPlaySound("Sounds\\sword.wav");
 	}
 }
 
@@ -73,6 +79,8 @@ void HealpotClickHandler( Item *pHeal )
 		g_pHero->iHealth = g_pHero->iMaxHealth;
 	}
 
+	SRHPlaySound("Sounds\\pot.wav");
+
 	DeleteItem(pHeal->pName);
 }
 
@@ -82,6 +90,8 @@ void ManapotClickHandler( Item *pMana )
 	if(g_pHero->iMana > g_pHero->iMaxMana){
 		g_pHero->iMana = g_pHero->iMaxMana;
 	}
+
+	SRHPlaySound("Sounds\\pot.wav");
 
 	DeleteItem(pMana->pName);
 }

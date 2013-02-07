@@ -4,6 +4,7 @@
 #include "GameUpdateFunctions.h"
 #include "GameGlobals.h"
 #include "GameMessageBox.h"
+#include "GameKeyboardHandler.h"
 
 Trigger * CreateTrigger( int iPosX,int iPosY,int iWidth,int iHeight,TriggerHandler pHandler )
 {
@@ -25,20 +26,18 @@ Trigger * CreateTrigger( int iPosX,int iPosY,int iWidth,int iHeight,TriggerHandl
 
 void ExitTrigger()
 {
-	g_pHandler.pUpdateHandler = UpdateIdle;
-	g_pHandler.pKeyDownHandler = NULL;
+	g_pHandler.pUpdateHandler = UpdateMessagebox;
+	g_pHandler.pKeyDownHandler = KeyboardHandlerMessageBox;
 	g_pHero->iPosY += g_iTileHeight;
-	g_iIdleTime = 5000;
 	g_pMessageBox = CreateMessageBox("I'll never get back to the prison. There has to be a way out of here...",200,200,200,75);
 }
 
 void GuardTrigger()
 {
 	if(g_pHero->iStrength < 10){
-		g_pHandler.pUpdateHandler = UpdateIdle;
-		g_pHandler.pKeyDownHandler = NULL;
+		g_pHandler.pUpdateHandler = UpdateMessagebox;
+		g_pHandler.pKeyDownHandler = KeyboardHandlerMessageBox;
 		g_pHero->iPosY -= g_iTileHeight;
-		g_iIdleTime = 5000;
 		g_pMessageBox = CreateMessageBox("Maybe I shouldn't approach that guard without a weapon.",200,200,200,50);
 	}
 }
