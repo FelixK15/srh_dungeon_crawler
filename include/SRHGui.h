@@ -20,9 +20,8 @@
  * 
  * @return SRHButton* Pointer to a SRHButton struct.
  */
-SRHButton *SRHCreateButton(std::string sCaption,std::string sBackgroundImage,
-						   std::string sInactiveImage,std::string sFocusedImage,
-						   int x,int y,SRHButtonClickHandler pHandler);
+SRHButton *SRHCreateButton(const char* pCaption,const char* pBackgroundImage,const char* pInactiveImage,const char *pFocusedImage,
+                          int iPosX,int iPosY,SRHButtonClickHandler pHandler);
 
 void SRHDrawButton(SRHButton *pButton);
 

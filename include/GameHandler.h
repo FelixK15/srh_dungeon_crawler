@@ -11,4 +11,11 @@ void Drawer();
 void ReleaseResources();
 void KeyboardHandler(char cKey);
 
+void StartGame();
+void QuitGame();
+void ShowInstructions();
+
+void TryOpenTreasure();
+void TryAttackEnemy();
+
 #endif

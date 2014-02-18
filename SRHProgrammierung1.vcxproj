@@ -18,7 +18,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v100</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -55,8 +55,11 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Msimg32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Msimg32.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy "$(ProjectDir)res\*" "$(ProjectDir)bin\$(Configuration)\" /y /s</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -69,14 +72,18 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>Msimg32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Msimg32.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy "$(ProjectDir)res\*" "$(ProjectDir)bin\$(Configuration)\" /y /s</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\GameDrawFunctions.h" />
     <ClInclude Include="include\GameGlobals.h" />
     <ClInclude Include="include\GameHandler.h" />
     <ClInclude Include="include\GameItemHandler.h" />
+    <ClInclude Include="include\GameKeyboardHandler.h" />
     <ClInclude Include="include\GameLevelLoader.h" />
     <ClInclude Include="include\GameMath.h" />
     <ClInclude Include="include\GameMenuFunctions.h" />
@@ -92,6 +99,7 @@
     <ClInclude Include="include\SRHGraphics.h" />
     <ClInclude Include="include\SRHGui.h" />
     <ClInclude Include="include\SRHIncludes.h" />
+    <ClInclude Include="include\SRHSound.h" />
     <ClInclude Include="include\SRHWindow.h" />
   </ItemGroup>
   <ItemGroup>
@@ -99,6 +107,7 @@
     <ClCompile Include="src\GameGlobals.cpp" />
     <ClCompile Include="src\GameHandler.cpp" />
     <ClCompile Include="src\GameItemHandler.cpp" />
+    <ClCompile Include="src\GameKeyboardHandler.cpp" />
     <ClCompile Include="src\GameLevelLoader.cpp" />
     <ClCompile Include="src\GameMath.cpp" />
     <ClCompile Include="src\GameMenuFunctions.cpp" />
@@ -112,6 +121,7 @@
     <ClCompile Include="src\SRHGlobals.cpp" />
     <ClCompile Include="src\SRHGraphics.cpp" />
     <ClCompile Include="src\SRHGui.cpp" />
+    <ClCompile Include="src\SRHSound.cpp" />
     <ClCompile Include="src\SRHWindow.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

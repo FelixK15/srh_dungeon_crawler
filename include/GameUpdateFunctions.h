@@ -6,4 +6,5 @@ void UpdateCamera();
 void UpdateHero(unsigned int iMS);
 void UpdateEnemies(unsigned int iMS);
 void UpdateIdle(unsigned int iMS);
+void UpdateMessagebox(unsigned int iMS);
 #endif

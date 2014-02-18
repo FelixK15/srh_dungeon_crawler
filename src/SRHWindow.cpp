@@ -94,7 +94,7 @@ void SRHCreateWindow(const int iWidth,const int iHeight,const char *pTitle,HINST
 		hInstance = (HINSTANCE)GetModuleHandle(NULL);
 	}
 
-#ifdef DEBUG
+#ifdef _DEBUG
 	SRHCreateConsole();
 #endif
 

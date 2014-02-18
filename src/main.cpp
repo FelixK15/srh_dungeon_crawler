@@ -20,6 +20,7 @@
 #include "GameKeyboardHandler.h"
 
 #include <time.h>
+#include <conio.h>
 
 void LoadResources()
 {
@@ -57,6 +58,7 @@ int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR pCommandLin
 	}catch(SRHWindowsException e)
 	{
 		printf(e.what());
+    _getch();
 	}
 	return iReturn;
 }

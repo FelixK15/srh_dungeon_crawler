@@ -63,9 +63,17 @@ extern FightScreen *g_pFightScreen;
 
 //Menu graphic
 extern SRHGraphic *g_pMenuGraphic;
+extern SRHGraphic *g_pMainMenuGraphic;
 
+//Instruction graphic
+extern SRHGraphic *g_pInstructions;
+
+//Game Over graphic
+extern SRHGraphic *g_pGameOverGraphic;
 //Fog of war
 extern SRHGraphic *g_pFogOfWar;
+
+extern SRHButton *g_pButtons[10];
 
 extern GameMessageBox *g_pMessageBox;
 

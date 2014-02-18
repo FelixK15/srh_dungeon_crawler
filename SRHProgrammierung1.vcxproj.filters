@@ -74,6 +74,12 @@
     <ClInclude Include="include\GameTrigger.h">
       <Filter>Game</Filter>
     </ClInclude>
+    <ClInclude Include="include\SRHSound.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GameKeyboardHandler.h">
+      <Filter>Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\SRHWindow.cpp">
@@ -128,6 +134,12 @@
       <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="src\GameUpdateFunctions.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SRHSound.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameKeyboardHandler.cpp">
       <Filter>Game</Filter>
     </ClCompile>
   </ItemGroup>

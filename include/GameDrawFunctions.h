@@ -11,5 +11,8 @@ void DrawHeroEquipment();
 void DrawInventory();
 void DrawMessageBox();
 void DrawFightScreen();
+void DrawMainMenu();
+void DrawGameOver();
+void DrawInstructions();
 
 #endif

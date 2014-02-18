@@ -13,7 +13,7 @@
  * @param iHeight Height of the window.
  * @param pTitle Title of the window.
  */
-void SRHCreateWindow(const int iWidth,const int iHeight,const char *pTitle);
+void SRHCreateWindow(const int iWidth,const int iHeight,const char *pTitle,HINSTANCE hInstance);
 
 /**
  * Closes a window previously created with SRHCreateWindow().
