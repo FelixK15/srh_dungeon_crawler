@@ -24,6 +24,17 @@
 
 void LoadResources()
 {
+	DWORD dirLength = GetModuleFileNameA(0, g_ProcessDirectory, 255);
+
+	for (int dirIndex = dirLength; dirIndex > 0; --dirIndex)
+	{
+		if (g_ProcessDirectory[dirIndex] == '\\')
+		{
+			g_ProcessDirectory[dirIndex] = 0;
+			break;
+		}
+	}
+
 	g_pMainMenuGraphic = SRHLoadGraphic("Images\\Menus\\mainmenu.bmp");
 	g_pInstructions = SRHLoadGraphic("Images\\Menus\\instructions.bmp");
 

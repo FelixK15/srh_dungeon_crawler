@@ -33,6 +33,9 @@ int g_iAmountDoors = 0;
 
 int g_iIdleTime = 0;
 
+//Directory of exe
+char g_ProcessDirectory[255];
+
 //Level dimension
 int g_iLevelHeight = 0;
 int g_iLevelWidth = 0;

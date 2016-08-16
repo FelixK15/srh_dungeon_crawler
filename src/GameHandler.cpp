@@ -191,8 +191,8 @@ void StartGame()
 {
 	ReleaseResources();
 
-	LoadLevel(".\\Data\\level.txt");
-	LoadItems(".\\Data\\items.txt");
+	LoadLevel("Data\\level.txt");
+	LoadItems("Data\\items.txt");
 
 	g_pHandler.pDrawHandler = Drawer;
 	g_pHandler.pUpdateHandler = Update;

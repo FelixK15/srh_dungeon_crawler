@@ -14,9 +14,12 @@
 
 void LoadLevel( const char *pFileName )
 {
+	char* path = (char*)alloca(255);
+	sprintf(path, "%s/%s", g_ProcessDirectory, pFileName);
+
 	//This functions opens the level file and iterates through every single char within
 	//the file.
-	FILE *pFile = fopen(pFileName,"r");
+	FILE *pFile = fopen(path,"r");
 	if(pFile == NULL){
 		char sBuffer[50];
 		sprintf(sBuffer,strerror(errno));
@@ -98,7 +101,10 @@ void LoadLevel( const char *pFileName )
 
 void LoadItems( const char *pFileName )
 {
-	FILE *pFile = fopen(pFileName,"r");
+	char* path = (char*)alloca(255);
+	sprintf(path, "%s/%s", g_ProcessDirectory, pFileName);
+
+	FILE *pFile = fopen(path,"r");
 	if(pFile == NULL){
 		char sBuffer[50];
 		sprintf(sBuffer,strerror(errno));

@@ -32,6 +32,9 @@ extern const int g_iTileHeight;
 extern int g_iLevelWidth;
 extern int g_iLevelHeight;
 
+//Directory of exe
+extern char g_ProcessDirectory[255];
+
 extern int g_iIdleTime;
 
 //All tiles are within this array.
